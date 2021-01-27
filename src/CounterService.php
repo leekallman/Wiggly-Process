@@ -6,7 +6,7 @@ namespace App;
 
 use PDO;
 use PDOStatement;
-
+// Handles communication with DB. Has all functions(increaceCounter, createCounter, etc)
 class CounterService
 {
     private PDO $pdo;
@@ -73,13 +73,13 @@ class CounterService
     public function createDatabaseTable(): void
     {
         $ddl = <<<EOF
-create table IF NOT EXISTS counters
-(
-	id int auto_increment
-		primary key,
-	value int default 0 not null,
-	name varchar(50) null
-);
+        create table IF NOT EXISTS counters
+        (
+            id int auto_increment
+                primary key,
+            value int default 0 not null,
+            name varchar(50) null
+        );
 EOF;
         $this->pdo->exec($ddl);
     }

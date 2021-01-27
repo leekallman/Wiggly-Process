@@ -51,15 +51,20 @@ class Api
     private function setup(App $app): App
     {
         $pdo = (new PdoFactory($this->getDatabaseSettings()))->createPdo();
-        $counterApi = new CounterApi(new CounterService($pdo));
+        $counterApi = new CounterApi(new CounterService($pdo)); # Create a api instance with pdo as settings
+
+        $postApi = new PostApi(new PostService($pdo));
 
         $app->options('/{routes:.*}', function (Request $request, Response $response) {
             // CORS Pre-Flight OPTIONS Request Handler
             return $response;
         });
-
         $app->group('/api/counters', function (Group $group) use ($counterApi) {
             $counterApi->setup($group);
+        });
+        $app->group('/api/posts', function (Group $group) use ($postApi) {
+            echo("TEST FRÅN PEBO!");
+            $postApi->setup($group);
         });
 
         return $app;
