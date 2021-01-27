@@ -1,0 +1,42 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100vw;
+    font-family: Futura, sans-serif;
+    display:grid;
+    grid-template-columns: repeat(6, 16.7%);
+    font-size: 16px;
+}
+
+header, footer{
+    grid-column: 1 /7;
+    width: 100vw;
+    background-color: #ACDBE5;
+}
+
+h1, .copyright{
+    margin: 5vh auto;
+    text-align: center;
+}
+
+.sidebar{
+    grid-column: 1 /2;
+    background-color: blueviolet;
+}
+
+.container{
+    grid-column: 2 /7;
+}
+
+li{
+    list-style: none;
+
+}
+
+.copyright{
+    font-size: 14px;
+}

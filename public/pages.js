@@ -7,43 +7,23 @@ const appendNode = (parent, elem) => {
     parent.appendChild(elem);
 };
 // Post Element
-const posts = document.querySelector('#posts');
+const pages = document.querySelector('#pages');
 // API URL
-const apiRoot = '/api/posts';
+const apiPages = '/api/pages';
 
-    /*//create new post div
-    const post = document.createElement("div");
-    post.classList.add("post");
-
-    const postTitle = document.createElement("h3");
-    postTitle.classList.add("postTitle");
-    post.appendChild(postTitle);
-
-    const postAuthor = document.createElement("h4");
-    postAuthor.classList.add("postAuthor");
-    post.appendChild(postAuthor);
-
-    const postContent = document.createElement("p");
-    postContent.classList.add("postContent");
-    post.appendChild(postContent);
-
-    const postCreated = document.createElement("h4");
-    postCreated.classList.add("postCreated");
-    post.appendChild(postCreated);*/
-
-fetch(apiRoot)
+fetch(apiPages)
     .then(res => res.json())
     .then (data => {
-        //iterate over posts
-        data.map((post) =>{
+        console.log(data);
+        //iterate over pages
+/*        data.map((post) =>{
             //create the elements
             let li = createNode('li'),
                 title = createNode('h3'),
                 author = createNode('p'),
                 content = createNode('div'),
                 img = createNode('img'),
-                span = createNode('span'),
-                line = createNode('hr');
+                span = createNode('span');
 
             title.innerText = post.title;
             author.innerText = post.author;
@@ -57,9 +37,8 @@ fetch(apiRoot)
             appendNode(li, content);
             appendNode(li, author);
             appendNode(li, span);
-            appendNode(li, line);
-            appendNode(posts, li);
-        });
+            appendNode(posts, li);*/
+/*        });*/
         //code to handle response
     }).catch(err => {
         //code to handle errors
