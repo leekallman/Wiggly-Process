@@ -13,7 +13,6 @@ use Slim\Psr7\Response;
 class Api
 {
     private App $app;
-
     /**
      * Api constructor.
      */
@@ -54,6 +53,7 @@ class Api
 /*        $counterApi = new CounterApi(new CounterService($pdo)); # Create a api instance with pdo as settings*/
 
         $postApi = new PostApi(new PostService($pdo));
+        $pagesApi = new PagesApi(new PagesService($pdo));
 
         $app->options('/{routes:.*}', function (Request $request, Response $response) {
             // CORS Pre-Flight OPTIONS Request Handler
@@ -65,6 +65,10 @@ class Api
         $app->group('/api/posts', function (Group $group) use ($postApi) {
             $postApi->setup($group);
         });
+
+        $app->group('/api/pages', function (Group $group) use ($pagesApi) {
+            $pagesApi->setup($group);
+    });
 
         return $app;
     }

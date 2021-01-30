@@ -46,6 +46,12 @@ class PostApi
             $response->getBody()->write(json_encode($this->postService->getPost((int)$args['id'])));
             return $response->withHeader('Content-Type', 'application/json');
         });
+        $group->delete('/{id}', function (Request $request, Response $response, $args) { // DELETE /api/posts/{id}    Get specific post
+            $this->postService->deletePost((int)$args['id']);
+            return $response->withStatus(code:204);
+        });
+
+
         /*  $group->post('/{id}', function (Request $request, Response $response, $args) { // POST /api/posts/{id}    Change specific post
             $input = json_decode(file_get_contents('php://input'));
             $title =  $input->title;

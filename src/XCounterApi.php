@@ -12,16 +12,16 @@ use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 class CounterApi
 {
     /**
-     * @var CounterService
+     * @var PagesService
      */
-    private CounterService $counterService;
+    private PagesService $counterService;
 
 
     /**
      * CounterApi constructor.
-     * @param CounterService $counterService
+     * @param PagesService $counterService
      */
-    public function __construct(CounterService $counterService)
+    public function __construct(PagesService $counterService)
     {
         $this->counterService = $counterService;
     }
@@ -29,17 +29,17 @@ class CounterApi
     public function setup(Group $group)
     {
         $group->get('', function (Request $request, Response $response, $args) { # GET api/counters
-            $response->getBody()->write(json_encode($this->counterService->getCounters()));
+            $response->getBody()->write(json_encode($this->counterService->getPages()));
             return $response->withHeader('Content-Type', 'application/json');
         });
         $group->post('', function (Request $request, Response $response, $args) { # POST api/counters
             $input = json_decode(file_get_contents('php://input'));
             $name =  $input->name;
-            $response->getBody()->write(json_encode($this->counterService->createCounter($name)));
+            $response->getBody()->write(json_encode($this->counterService->createPage($name)));
             return $response->withHeader('Content-Type', 'application/json');
         });
         $group->get('/{id}', function (Request $request, Response $response, $args) { # GET api/counters/{id}
-            $response->getBody()->write(json_encode($this->counterService->getCounter((int)$args['id'])));
+            $response->getBody()->write(json_encode($this->counterService->getPage((int)$args['id'])));
             return $response->withHeader('Content-Type', 'application/json');
         });
         $group->post('/{id}', function (Request $request, Response $response, $args) { # POST api/counters/{id}

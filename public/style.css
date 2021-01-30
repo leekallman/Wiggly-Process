@@ -28,8 +28,27 @@ h1, .copyright{
     background-color: blueviolet;
 }
 
+.sidebar ul{
+    margin-top:4vh;
+}
+.sidebar li{
+    font-size: 20px;
+    margin-bottom: 2vh;
+}
+
+.sidebar a{
+    text-decoration: none;
+    color: #000000;
+}
+.sidebar a:hover{
+    color: #ACDBE5;
+}
+
 .container{
     grid-column: 2 /7;
+}
+.inner-container{
+    background-color: darksalmon;
 }
 
 li{

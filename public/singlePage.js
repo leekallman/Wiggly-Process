@@ -6,62 +6,33 @@ const createNode = (elem) => {
 const appendNode = (parent, elem) => {
     parent.appendChild(elem);
 };
-/*// Post Element
-const posts = document.querySelector('#posts');*/
-
+// Page Element
+const main = document.querySelector('#main');
 
 // API URL
-const apiRoot = '/api/posts';
+const apiPages = '/api/pages';
 
-// Post Element
-const main = document.querySelector('#main');
-let posts = createNode('ul'),
-    heading = createNode('h2');
-
-posts.id = "posts";
-heading.innerText = "News";
-
-appendNode(posts, heading);
-appendNode(main, posts);
-
-
-fetch(apiRoot)
+fetch(apiPages)
     .then(res => res.json())
     .then (data => {
-        //iterate over posts
-        data.map((post) =>{
-            //create the elements
-            let li = createNode('li'),
-                title = createNode('h3'),
-                author = createNode('p'),
-                content = createNode('div'),
-                img = createNode('img'),
-                span = createNode('span'),
-                line = createNode('hr');
+        data.map((page) =>{
+            console.log(page.id)
+/*            //create the elements
+            let outerContainer = createNode('div');
 
-            title.innerText = post.title;
-            author.innerText = post.author;
-            content.innerText = post.content;
-            img.src = post.image;
-            span.innerText = post.created;
-
-            // append all elements
-            appendNode(li, title);
-            appendNode(li, img);
-            appendNode(li, content);
-            appendNode(li, author);
-            appendNode(li, span);
-            appendNode(li, line);
-            appendNode(posts, li);
+            // append outer container
+            appendNode(main, outerContainer);*/
         });
         //code to handle response
     }).catch(err => {
-    //code to handle errors
-    console.error('An error occurred: ', err);
+        //code to handle errors
+        console.error('An error occurred: ', err);
 })
 
-/*// Please don't use JQuery for DOM manipulation and form submission IRL. Please use React/Vue/Angular instead!
 
+
+
+/*// Please don't use JQuery for DOM manipulation and form submission IRL. Please use React/Vue/Angular instead!
 $(function () {
     let apiRoot = '/api/posts';
 

@@ -75,10 +75,10 @@ class PostService
     {
         $created = (new DateTime())->getTimestamp(); //maybe need to change to int in DataGrip
         $image = "";
-        $query = "insert into posts (created, title, author, content, image) values (:created, :title, :author, :content, :image);";
+        $query = "insert into posts (title, author, content, image) values (:title, :author, :content, :image);";
         $statement = $this->prepare($query);
         $statement->bindParam(':title', $title);
-        $statement->bindParam(':created', $created);
+  /*      $statement->bindParam(':created', $created);*/
         $statement->bindParam(':author', $author);
         $statement->bindParam(':content', $content);
         $statement->bindParam(':image', $image);

@@ -1,44 +1,41 @@
-// create an element
+/*// create an element
 const createNode = (elem) => {
     return document.createElement(elem);
 };
 // append an element to parent
 const appendNode = (parent, elem) => {
     parent.appendChild(elem);
-};
-// Post Element
-const pages = document.querySelector('#pages');
+};*/
+// Page Element
+const sideBar = document.querySelector('#sideBar');
+let nav = createNode('ul');
+
+appendNode(sideBar, nav);
+
+
 // API URL
 const apiPages = '/api/pages';
 
 fetch(apiPages)
     .then(res => res.json())
     .then (data => {
-        console.log(data);
         //iterate over pages
-/*        data.map((post) =>{
-            //create the elements
+        data.map((page) =>{
+            //create side bar
             let li = createNode('li'),
-                title = createNode('h3'),
-                author = createNode('p'),
-                content = createNode('div'),
-                img = createNode('img'),
-                span = createNode('span');
+                title = createNode('a');
 
-            title.innerText = post.title;
-            author.innerText = post.author;
-            content.innerText = post.content;
-            img.src = post.image;
-            span.innerText = post.created;
+            title.innerText = page.title;
+  /*          title.href = page.href;*/
+            title.addEventListener("click", function() {
+                alert("Blah blah...");
+            }, false);
 
             // append all elements
             appendNode(li, title);
-            appendNode(li, img);
-            appendNode(li, content);
-            appendNode(li, author);
-            appendNode(li, span);
-            appendNode(posts, li);*/
-/*        });*/
+            appendNode(nav, li);
+
+        });
         //code to handle response
     }).catch(err => {
         //code to handle errors
@@ -46,7 +43,6 @@ fetch(apiPages)
 })
 
 /*// Please don't use JQuery for DOM manipulation and form submission IRL. Please use React/Vue/Angular instead!
-
 $(function () {
     let apiRoot = '/api/posts';
 

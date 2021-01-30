@@ -7,7 +7,7 @@ namespace App;
 use PDO;
 use PDOStatement;
 // Handles communication with DB. Has all functions(increaceCounter, createCounter, etc)
-class CounterService
+class PagesService
 {
     private PDO $pdo;
 
@@ -18,7 +18,7 @@ class CounterService
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-        $this->createDatabaseTable();
+   /*     $this->createDatabaseTable();*/
     }
 
     /**
@@ -30,47 +30,54 @@ class CounterService
         return $this->pdo->prepare($query);
     }
 
-    public function getCounters(): array
+    public function getPages(): array
     {
-        $query = "select * from counters";
+        $query = "select * from pages";
         $statement = $this->prepare($query);
         $statement->execute();
 
-        $counters = array();
-        while ($entry = $statement->fetchObject(CounterModel::class)) {
-            $counters[] = $entry;
+        $pages = array();
+        while ($entry = $statement->fetchObject(PageModel::class)) {
+            $pages[] = $entry;
         }
-        return $counters;
+        return $pages;
     }
 
-    public function increaseCounter(int $id): ?CounterModel
+    //Update single page
+    public function updatePage(int $id, string $title, string $url): ?PageModel
     {
-        $query = "update counters set value=value+1 where id=:id";
+        $query = "update pages set title=:title, url=:url where id=:id";
+        $statement = $this->prepare($query);
+        $statement->bindParam(':id', $id);
+        $statement->bindParam(':title', $title);
+        $statement->bindParam(':url', $url);
+
+
+        $statement->execute();
+        $id = (int) $id;
+
+        return $this->getPage($id); //send back the updates
+    }
+
+    public function getPage(int $id): ?PageModel
+    {
+        $query = "select * from pages where id=:id";
         $statement = $this->prepare($query);
         $statement->execute(compact('id'));
-
-        return $this->getCounter($id);
+        return $statement->fetchObject(PageModel::class) ?: null;
     }
 
-    public function getCounter(int $id): ?CounterModel
+    public function createPage(string $name): PageModel
     {
-        $query = "select * from counters where id=:id";
-        $statement = $this->prepare($query);
-        $statement->execute(compact('id'));
-        return $statement->fetchObject(CounterModel::class) ?: null;
-    }
-
-    public function createCounter(string $name): CounterModel
-    {
-        $query = "insert into counters (name) values (:name);";
+        $query = "insert into pages (name) values (:name);";
         $statement = $this->prepare($query);
         $statement->execute(compact('name'));
 
         $id = (int)$this->pdo->lastInsertId();
-        return $this->getCounter($id);
+        return $this->getPage($id);
     }
 
-    public function createDatabaseTable(): void
+    /*public function createDatabaseTable(): void
     {
         $ddl = <<<EOF
         create table IF NOT EXISTS counters
@@ -82,5 +89,5 @@ class CounterService
         );
 EOF;
         $this->pdo->exec($ddl);
-    }
+    }*/
 }

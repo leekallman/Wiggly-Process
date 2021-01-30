@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App;
 
 
-class CounterModel
+class PageModel
 {
     public int $id;
-    public int $value;
-    public ?string $name;
+    public string $title;
+    public string $url;
 }
