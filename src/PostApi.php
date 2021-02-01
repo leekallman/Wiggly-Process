@@ -35,10 +35,10 @@ class PostApi
         $group->post('', function (Request $request, Response $response, $args) { // POST /api/posts          Create post
             $input = json_decode(file_get_contents('php://input'));
             $title =  $input->title;
-            $author=  $input->author;
             $content =  $input->content;
             $image = $input->image;
-            $response->getBody()->write(json_encode($this->postService->createPost($title, $author, $content, $image)));
+            $author=  $input->author;
+            $response->getBody()->write(json_encode($this->postService->createPost($title, $image, $content, $author)));
             return $response->withHeader('Content-Type', 'application/json');
         });
 

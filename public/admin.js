@@ -11,26 +11,10 @@ const appendNode = (parent, elem) => {
 const apiRoot = '/api/posts';
 
 // Post Element
-const main = document.querySelector('#main');
-let container = createNode('div'),
-    posts = createNode('ul'),
-    postArchive = createNode('button'),
-    addPost  = createNode('button');
-
-    editPost  = createNode('button');
-    deletePost  = createNode('button');
-
-    container.classList = "inner-container";
-    postArchive.id = "postArchive";
-    addPost.id = "addPost";
+const archive = document.querySelector('#archive');
+const posts = createNode('ul');
     posts.id = "posts";
-    postArchive.innerText = "News Archive";
-    addPost.innerText = "Add News";
-
-    appendNode(container, postArchive);
-    appendNode(container, addPost);
-    appendNode(container, posts);
-    appendNode(main, container);
+    appendNode(archive, posts);
 
 
 fetch(apiRoot)
@@ -39,84 +23,165 @@ fetch(apiRoot)
         //iterate over posts
         data.map((post) =>{
 
-            let li = createNode('li'),
+            let
+                li = createNode('li'),
+                editForm = createNode('form'),
+                idLabel = createNode('label'),
+                id = createNode('span'),
                 titleLabel = createNode('label'),
                 titleInput = createNode('input'),
                 authorLabel = createNode('label'),
                 authorInput = createNode('input'),
                 contentLabel = createNode('label'),
                 contentTextarea = createNode('textarea'),
+                image = createNode('img'),
                 imageLabel = createNode('label'),
                 imageInput = createNode('input'),
-                span = createNode('span'),
-                submitButton = createNode('input');
+                created = createNode('span'),
+                createdLabel = createNode('span'),
+                submitButton = createNode('button'),
+                deleteButton  = createNode('button');
 
 
-            //create the elements
-/*            let li = createNode('li'),
-                title = createNode('h3'),
-                author = createNode('p'),
-                content = createNode('div'),
-                img = createNode('img'),
-                span = createNode('span'),
-                line = createNode('hr'),
-                edit = createNode('button'),
-                del = createNode('button');*/
+            li.classList = "editElem";
+            li.id = "editElem" + post.id;
+            editForm.classList = "editForm";
+            editForm.id = "editForm";
 
-            li.id = "editElem";
+            idLabel.innerText = "Post ID:";
+            idLabel.id = "id" + post.id;
+            id.size = "3";
+            id.innerText = post.id;
+
+            titleLabel.innerText = "Title:";
             titleInput.value = post.title;
+            titleInput.id = "editTitle" + post.id
+            titleInput.type = "text";
+
+            authorLabel.innerText = "Author:";
+            authorInput.type = "text";
             authorInput.value = post.author;
+            authorInput.id = "editAuthor" + post.id;
+
+            contentLabel.innerText = "Content:";
             contentTextarea.value = post.content;
-            imageInput.src = post.image;
-            span.innerText = post.created;
-            submitButton.value = "Submit";
-            submitButton.type = "submit";
+            contentTextarea.rows = "10";
+            contentTextarea.id = "editContent" + post.id;
+
+            image.src = post.image;
+            imageLabel.innerText = "Image url:";
+            imageInput.type = "text";
+            imageInput.value = post.image;
+            imageInput.id = "editImage" + post.id;
+
+            createdLabel.innerText = "Created:";
+            created.innerText = post.created;
+
+            submitButton.value = post.id;
+            submitButton.innerText = "Submit change";
+            submitButton.type = "button";
             submitButton.id = "submit";
-/*          edit.classList = "editPost";
-            del.classList = "deletePost";
-            edit.innerText = "edit";
-            del.innerText = "delete";*/
+            submitButton.onclick = editPost;
+
+            deleteButton.value = post.id;
+            deleteButton.innerText = "Delete Post";
+            deleteButton.type = "button";
+        /*    deleteButton.id = "delete";*/
 
             // append all elements
-           appendNode(li, titleInput);
-           appendNode(li, imageInput);
-           appendNode(li, contentTextarea);
-           appendNode(li, authorInput);
-           appendNode(li, span);
-           appendNode(li, submitButton);
-/*         appendNode(li, edit);
-           appendNode(li, del);
-           appendNode(li, line);*/
-           appendNode(posts, li);
+            appendNode(editForm, idLabel);
+            appendNode(editForm, id);
+            appendNode(editForm, titleLabel);
+            appendNode(editForm, titleInput);
+            appendNode(editForm, image);
+            appendNode(editForm, imageLabel);
+            appendNode(editForm, imageInput);
+            appendNode(editForm, contentLabel);
+            appendNode(editForm, contentTextarea);
+            appendNode(editForm, authorLabel);
+            appendNode(editForm, authorInput);
+            appendNode(editForm, createdLabel);
+            appendNode(editForm, created);
+            appendNode(editForm, submitButton);
+            appendNode(editForm, deleteButton);
+            appendNode(li, editForm);
+            appendNode(posts, li);
 
 
- /*           // append all elements
-            appendNode(li, title);
-            appendNode(li, img);
-            appendNode(li, content);
-            appendNode(li, author);
-            appendNode(li, span);
-            appendNode(li, edit);
-            appendNode(li, del);
-            appendNode(li, line);
-            appendNode(posts, li);*/
         });
         //code to handle response
     }).catch(err => {
     //code to handle errors
     console.error('An error occurred: ', err);
-})
+});
+
+/*Edit post*/
+
+function editPost(event) {
+    let postId = event.target.value;
+
+    let postTitle = document.getElementById('editTitle' + postId);
+    let postImage = document.getElementById('editImage' + postId);
+    let postContent = document.getElementById('editContent' + postId);
+    let postAuthor = document.getElementById('editAuthor' + postId);
+
+    data = {
+        title : postTitle.value,
+        image : postImage.value,
+        content : postContent.value,
+        author : postAuthor.value
+    }
+
+    fetch(apiRoot, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response=>response.json())
+        .then(data=>console.log(data))
+
+
+    /*editForm.onsubmit = async (e) => {
+        e.preventDefault();
+        let postId = e.id;
+        console.log(e.id);
+        let editForm = document.querySelector("#editForm");
+        // var form = document.forms[0];
+
+        data = {
+            title : editForm.querySelector('input[name="title"]').value,
+            author : editForm.querySelector('input[name="author"]').value,
+            content : editForm.querySelector('textarea[name="content"]').value,
+            image : editForm.querySelector('input[name="image"]').value
+        }
+
+        let response = await fetch(apiRoot, {
+            method: 'PUT', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response=>response.json())
+            .then(data=>console.log(data))*/
+
+    /*    let text = await response.text(); // read response body as text
+        document.querySelector("#decoded").innerHTML = text;*/
+};
 
 /*Add post*/
 formElem.onsubmit = async (e) => {
     e.preventDefault();
     let form = document.querySelector("#formElem");
     // var form = document.forms[0];
+    console.log(form)
 
     data = {
         title : form.querySelector('input[name="title"]').value,
         author : form.querySelector('input[name="author"]').value,
-        content : form.querySelector('input[name="content"]').value,
+        content : form.querySelector('textarea[name="content"]').value,
         image : form.querySelector('input[name="image"]').value
     }
 
@@ -130,36 +195,11 @@ formElem.onsubmit = async (e) => {
         .then(response=>response.json())
         .then(data=>console.log(data))
     document.getElementById('formElem').reset();
-    /*    let text = await response.text(); // read response body as text
-        document.querySelector("#decoded").innerHTML = text;*/
+
+    // let text = await response.text(); // read response body as text
+    // document.querySelector("#decoded").innerHTML = text;
 };
 
-/*Edit post*/
-editElem.onsubmit = async (e) => {
-    e.preventDefault();
-    let editForm = document.querySelector("#editElem");
-    // var form = document.forms[0];
-
-    data = {
-        title : editForm.querySelector('input[name="title"]').value,
-        author : editForm.querySelector('input[name="author"]').value,
-        content : editForm.querySelector('input[name="content"]').value,
-        image : editForm.querySelector('input[name="image"]').value
-    }
-
-    let response = await fetch(apiRoot, {
-        method: 'PUT', // or 'PUT'
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response=>response.json())
-        .then(data=>console.log(data))
-
-    /*    let text = await response.text(); // read response body as text
-        document.querySelector("#decoded").innerHTML = text;*/
-};
 
 
 /*Click the post's edit button*/

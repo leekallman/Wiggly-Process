@@ -46,15 +46,15 @@ class PostService
     }
 
     //Update single post
-    public function updatePost(int $id, string $title, string $author, string $content ): ?PostModel
+    public function updatePost(int $id, string $title, string $image, string $content, string $author): ?PostModel
     {
-        $query = "update posts set title=:title, author=:author, content=:content where id=:id";
+        $query = "update posts set title=:title, image=:image, content=:content, author=:author where id=:id";
         $statement = $this->prepare($query);
         $statement->bindParam(':id', $id);
         $statement->bindParam(':title', $title);
-        $statement->bindParam(':author', $author);
+        $statement->bindParam(':image', $image);
         $statement->bindParam(':content', $content);
-/*        $statement->bindParam(':last_edited', $last_edited);*/
+        $statement->bindParam(':author', $author);
         $statement->execute();
         $id = (int) $id;
 
@@ -70,18 +70,29 @@ class PostService
         return $statement->fetchObject(PostModel::class) ?: null;
     }
 
+    // Delete specific posts
+    public function deletePost(int $id): ?PostModel
+    {
+        $query = "delete from posts where id=:id";
+        $statement = $this->prepare($query);
+        $statement->execute(compact('id'));
+        return $statement->fetchObject(PostModel::class) ?: null;
+    }
+
+
     //create new post
-    public function createPost(string $title, string $author, string $content): ?PostModel
+    public function createPost(string $title, string $image, string $content, string $author): ?PostModel
     {
         $created = (new DateTime())->getTimestamp(); //maybe need to change to int in DataGrip
         $image = "";
-        $query = "insert into posts (title, author, content, image) values (:title, :author, :content, :image);";
+        $query = "insert into posts (title, image, content, author) values (:title, :image, :content, :author);";
         $statement = $this->prepare($query);
         $statement->bindParam(':title', $title);
-  /*      $statement->bindParam(':created', $created);*/
-        $statement->bindParam(':author', $author);
-        $statement->bindParam(':content', $content);
         $statement->bindParam(':image', $image);
+        $statement->bindParam(':content', $content);
+        $statement->bindParam(':author', $author);
+        /*      $statement->bindParam(':created', $created);*/
+
         $statement->execute();
 
 

@@ -8,8 +8,9 @@ class PostModel
 {
     public int $id;
     public string $title;
-    public string $author;
 /*    public int $created;*/
+    public string $image;
     public string $content;
+    public string $author;
 
 }

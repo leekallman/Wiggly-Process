@@ -23,6 +23,8 @@ h1, .copyright{
     text-align: center;
 }
 
+
+
 .sidebar{
     grid-column: 1 /2;
     background-color: blueviolet;
@@ -47,13 +49,40 @@ h1, .copyright{
 .container{
     grid-column: 2 /7;
 }
-.inner-container{
-    background-color: darksalmon;
+a{
+    text-decoration: none;
+    color:black;
+}
+h2{
+    display: inline-block;
+}
+#toAddPost{
+    padding:1vh;
 }
 
 li{
     list-style: none;
+    margin-bottom: 10vh;
 
+}
+
+input[type=text],textarea {
+    width: 100%;
+    padding: 1vh 1vw;
+    margin: 8px 0;
+    box-sizing: border-box;
+    color: #505050;
+}
+
+input, label{
+    display:block;
+}
+#id{
+    display:inline-block;
+}
+
+label{
+    margin-top: 2vh;
 }
 
 .copyright{
