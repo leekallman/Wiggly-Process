@@ -6,25 +6,29 @@ const createNode = (elem) => {
 const appendNode = (parent, elem) => {
     parent.appendChild(elem);
 };
-/*// Post Element
-const posts = document.querySelector('#posts');*/
-
-
-// API URL
+// api url
 const apiRoot = '/api/posts';
 
-// Post Element
+// create a news list
 const main = document.querySelector('#main');
 let posts = createNode('ul'),
-    heading = createNode('h2');
+    banner = createNode('div'),
+    bannerH3 = createNode('h3'),
+    dot = createNode('span');
 
+dot.id = "dot";
 posts.id = "posts";
-heading.innerText = "News";
+banner.id = "banner";
+bannerH3.id = "bannerH3";
+bannerH3.innerText = "Wiggly News";
 
-appendNode(posts, heading);
+appendNode(banner, dot);
+appendNode(banner, bannerH3);
+appendNode(posts, banner);
 appendNode(main, posts);
 
 
+/*fetch the data from post table*/
 fetch(apiRoot)
     .then(res => res.json())
     .then (data => {
@@ -32,26 +36,37 @@ fetch(apiRoot)
         data.map((post) =>{
             //create the elements
             let li = createNode('li'),
+                postLink = createNode('button'),
                 title = createNode('h3'),
                 author = createNode('p'),
-                content = createNode('div'),
+                content = createNode('p'),
+                extract = createNode('p'),
                 img = createNode('img'),
                 span = createNode('span'),
-                line = createNode('hr');
 
-            title.innerText = post.title;
-            author.innerText = post.author;
-            content.innerText = post.content;
-            img.src = post.image;
-            span.innerText = post.created;
+                str = post.created;
+                res = str.substring(0, 10);
+                postLink.onclick = singlePost;
+                title.id = post.id;
+                title.innerText = post.title;
+                author.innerText = post.author;
+                content.innerText = post.content;
+                content.style.display = "none";
+                extract.innerText = post.extract;
+                content.id = post.id;
+                img.src = post.image;
+                img.id = post.id;
+                span.innerText = res;
+
 
             // append all elements
-            appendNode(li, title);
-            appendNode(li, img);
-            appendNode(li, content);
-            appendNode(li, author);
-            appendNode(li, span);
-            appendNode(li, line);
+            appendNode(postLink, img);
+            appendNode(postLink, title);
+            appendNode(postLink, extract);
+            appendNode(postLink, content);
+            appendNode(postLink, author);
+            appendNode(postLink, span);
+            appendNode(li, postLink);
             appendNode(posts, li);
         });
         //code to handle response
@@ -60,106 +75,72 @@ fetch(apiRoot)
     console.error('An error occurred: ', err);
 })
 
-/*// Please don't use JQuery for DOM manipulation and form submission IRL. Please use React/Vue/Angular instead!
 
-$(function () {
-    let apiRoot = '/api/posts';
+/*function to open single post*/
+function singlePost(event) {
+    let postId = event.target.id;
+    fetch(apiRoot + "/" + postId)
+        .then(res => res.json())
+        .then (data => {
+                let li = createNode('li'),
+                    title = createNode('h3'),
+                    author = createNode('p'),
+                    content = createNode('p'),
+                    img = createNode('img'),
+                    span = createNode('span'),
+                    str = data.created,
+                    res = str.substring(0, 10);
 
-    function getPostRowHtml(post) {
-        return `<div class="row" data-post-id="${post.id}">
-        <div class="hej">
-            ${post.id}
-        </div>
-        <div class="col-sm">
-            <b>${post.title}</b>
-        </div>
-        <div class="col-sm">
-            Author: ${post.author}
-        </div>
-        <div class="col-sm">
-            ${post.content}
-        </div>
-        <div class="col-sm">
-            <img src="${post.image}"/>
-        </div>
-        <div class="col-sm">
-            ${post.created}
-        </div>
+                title.innerText = data.title;
+                author.innerText = data.author;
+                content.innerText = data.content;
+                img.src = data.image;
+                span.innerText = res;
+                posts.innerText = "";
 
-        <div class="col-sm">
-            <button class="btn btn-sm btn-primary updatePost" data-post-id="${post.id}" type="button">edit</button>
-        </div>
-        <br><br>
-    </div>`;
-        console.log('getPost');
-    }
 
-    function installPostClickHandler() {
-        $(".updatePost").off('click').click(postClickHandler);
+                // append all elements
+                appendNode(li, img);
+                appendNode(li, title);
+                appendNode(li, content);
+                appendNode(li, author);
+                appendNode(li, span);
+                appendNode(main, li);
 
-        function postClickHandler(event) {
-            event.target.setAttribute('disabled̈́', 'disabled')
-            let postId = event.target.getAttribute('data-post-id');
-            $.post(apiRoot + "/" + postId,
-                {},
-                function (post, status) {
-                    $(".row[data-post-id=" + postId + "]").replaceWith(getPostRowHtml(post));
-                    installPostClickHandler();
-                });
+            }).catch(err => {
+                console.error('An error occurred: ', err);
+            })
         }
-        console.log('install-function');
-    }
 
-    function installFormSubmitHandler() {
-        $("#addPostForm").submit(function (event) {
-            event.target.setAttribute('disabled̈́', 'disabled');
-            let $postTitle = $('#postTitle', event.target);
-            let $postAuthor = $('#postAuthor', event.target);
-            let $postContent = $('#postContent', event.target);
-            let $postImage = $('#postImage', event.target);
-            let $postCreated = $('#postCreated', event.target);
-            let title = $postTitle.val();
-            let author = $postAuthor.val();
-            let content = $postContent.val();
-            let image = $postImage.val();
-            let created = $postCreated.val();
 
-            console.log(title + content + author);
 
-            $.ajax({
-                type: 'POST',
-                url: apiRoot,
-                data: JSON.stringify({
-                    title: title,
-                    author: author,
-                    content: content,
-                    image: image,
-                    created: created,
-                }),
-                success: function (post, status) {
-                    $("#addPostRow").before(getPostRowHtml(post));
-                    installPostClickHandler();
-                    $postName.val('');
-                    event.target.removeAttribute('disabled̈́');
-                    console.log("if success post new article");
-                },
-                contentType: "application/json",
-                dataType: 'json'
-            });
+/*function addEditEventListener(display, data) {
+    let editBtns = document.querySelectorAll(".edit-btn")
 
-            event.preventDefault();
-        });
-    }
+    editBtns.forEach(editBtn => {
+        editBtn .addEventListener("click", function(e){
+            let clickedBtn = getClickedBtn(e.target)
+            let clickedId = clickedBtn.parentNode.id
 
-    function loadPost() {
-        $.getJSON(apiRoot, function (result) {
-            $.each(result, function (i, post) {
-                $("#addPostRow").before(getPostRowHtml(post));
-            });
-            installPostClickHandler();
-        });
-    }
+            let dataToEdit = data.find(function(item) {
+                if(item.id === clickedId) {
+                    return true
+                }
+            })
 
-    installFormSubmitHandler();
-    loadPost();
-});*/
+            displayForm(clickedBtn, display, dataToEdit)
+            addEditRecipeSubmitListener(clickedId)
+            addEditPageSubmitListener(clickedId)
+        })
+    })
+}*/
+
+
+
+/*
+function convertUnixToDate(unix) {
+    const milliseconds = unix * 1000;
+    const dateObject = new Date(milliseconds);
+    return dateObject.toLocaleString();
+}
+*/

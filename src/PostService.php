@@ -19,7 +19,7 @@ class PostService
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-/*        $this->createDatabaseTable();*/
+        /*        $this->createDatabaseTable();*/
     }
 
     /**
@@ -30,11 +30,19 @@ class PostService
     {
         return $this->pdo->prepare($query);
     }
+ /*       $query = "select *, substr(content, 1,100) as extract from posts";
+
+        $statement = $this->prepare($query);
+        $statement->execute();
+
+        return $this->postExtract($id);
+    }*/
 
     // Get all posts
     public function getPosts(): array
     {
-        $query = "select * from posts";
+        $query = "select * from posts order by created desc";
+
         $statement = $this->prepare($query);
         $statement->execute();
 
@@ -46,13 +54,13 @@ class PostService
     }
 
     //Update single post
-    public function updatePost(int $id, string $title, string $image, string $content, string $author): ?PostModel
+    public function updatePost(int $id, string $image, string $title, string $content, string $author): ?PostModel
     {
-        $query = "update posts set title=:title, image=:image, content=:content, author=:author where id=:id";
+        $query = "update posts set image=:image, title=:title, content=:content, author=:author where id=:id";
         $statement = $this->prepare($query);
         $statement->bindParam(':id', $id);
-        $statement->bindParam(':title', $title);
         $statement->bindParam(':image', $image);
+        $statement->bindParam(':title', $title);
         $statement->bindParam(':content', $content);
         $statement->bindParam(':author', $author);
         $statement->execute();
@@ -78,42 +86,33 @@ class PostService
         $statement->execute(compact('id'));
         return $statement->fetchObject(PostModel::class) ?: null;
     }
-
+    // Create extract from content
+    public function postExtract(string $content, $limit)
+    {
+        if (str_word_count($content, 0) > $limit) {
+            $words = str_word_count($content, 2);
+            $pos = array_keys($words);
+            $content = substr($content, 0, $pos[$limit]) . '...';
+        }
+        return $content;
+    }
 
     //create new post
-    public function createPost(string $title, string $image, string $content, string $author): ?PostModel
+    public function createPost(string $image, string $title, string $content, string $author): ?PostModel
     {
-        $created = (new DateTime())->getTimestamp(); //maybe need to change to int in DataGrip
-        $image = "";
-        $query = "insert into posts (title, image, content, author) values (:title, :image, :content, :author);";
+        $created = (new DateTime())->getTimestamp();
+        $extract = $this ->postExtract($content, 50);
+        $query = "insert into posts (image, title, extract, content, author) values (:image, :title, :extract, :content, :author);";
         $statement = $this->prepare($query);
-        $statement->bindParam(':title', $title);
         $statement->bindParam(':image', $image);
+        $statement->bindParam(':title', $title);
+        $statement->bindParam(':extract', $extract);
         $statement->bindParam(':content', $content);
         $statement->bindParam(':author', $author);
-        /*      $statement->bindParam(':created', $created);*/
-
         $statement->execute();
 
 
         $id = (int)$this->pdo->lastInsertId(); // get the id for the new post
         return $this->getPost($id);
     }
-
-    /*public function createDatabaseTable(): void
-    {
-        $ddl = <<<EOF
-create table IF NOT EXISTS counters
-(
-	id int auto_increment
-		primary key,
-	title varchar(50) not null,
-	author varchar(50) not null,
-	content varchar(255),
-	created int(10)
-
-);
-EOF;
-        $this->pdo->exec($ddl);
-    }*/
 }

@@ -1,22 +1,102 @@
-/*// create an element
-const createNode = (elem) => {
-    return document.createElement(elem);
-};
-// append an element to parent
-const appendNode = (parent, elem) => {
-    parent.appendChild(elem);
-};*/
-// Page Element
-const sideBar = document.querySelector('#sideBar');
-let nav = createNode('ul');
-
-appendNode(sideBar, nav);
-
-
-// API URL
+// api url
 const apiPages = '/api/pages';
 
+// Create sidebar
+const sideBar = document.querySelector('#sideBar');
+
+let nav = createNode('ul'),
+    archiveLink = createNode('li'),
+    archiveHref = createNode('a');
+
+    archiveHref.innerText = "News Archive";
+    archiveHref.href = "/archive.html";
+    appendNode(sideBar, nav);
+
+
+    /*fetching data from the pages table*/
 fetch(apiPages)
+    .then(res => res.json())
+    .then (data => {
+
+        //iterate over pages
+        data.map((page) => {
+
+            let subpage = createNode('li'),
+            pageLink = createNode('button');
+
+            pageLink.value = page.id;
+            pageLink.innerText = page.title;
+            pageLink.type = "button";
+            pageLink.onclick = singlePage;
+
+            appendNode(subpage, pageLink);
+            appendNode(nav, subpage);
+            appendNode(archiveLink, archiveHref);
+            appendNode(nav, archiveLink);
+        })
+    })
+
+
+
+// Single page function
+function singlePage(event) {
+    /*    event.preventDefault();*/
+    let pageId = event.target.value;
+    document.getElementById("main").innerHTML = "";
+
+    fetch(apiPages + '/' + pageId)
+        .then(response => response.json())
+        .then(data => {
+                //create the elements
+                let h1 = createNode('h1'),
+                    content = createNode('p');
+
+                h1.innerText = data.h1;
+                content.innerText = data.content;
+
+                // append all elements
+                appendNode(main, h1);
+                appendNode(main, content);
+            //code to handle response
+        }).catch(err => {
+        //code to handle errors
+        console.error('An error occurred: ', err);
+    });
+}
+
+
+
+/*
+//Fetch single pages
+fetch(apiPages + '/' + pageId)
+    .then(res => res.json())
+    .then (data => {
+        //iterate over posts
+        data.map((page) =>{
+            //create the elements
+            let h1 = createNode('h1'),
+                content = createNode('p');
+
+            h1.innerText = page.h1;
+            content.innerText = page.content;
+
+
+            // append all elements
+            appendNode(main, h1);
+            appendNode(main, content);
+    });
+//code to handle response
+}).catch(err => {
+    //code to handle errors
+    console.error('An error occurred: ', err);
+})
+
+*/
+
+
+
+
+/*fetch(apiPages)
     .then(res => res.json())
     .then (data => {
         //iterate over pages
@@ -26,21 +106,23 @@ fetch(apiPages)
                 title = createNode('a');
 
             title.innerText = page.title;
-  /*          title.href = page.href;*/
-            title.addEventListener("click", function() {
-                alert("Blah blah...");
-            }, false);
+            title.href = page.href;
+            title.value = page.id;
+            title.type = "button";
+            title.onclick = xsinglePost;
 
             // append all elements
             appendNode(li, title);
             appendNode(nav, li);
-
+            appendNode(admin, adminLink);
+            appendNode(nav, admin);
         });
         //code to handle response
     }).catch(err => {
         //code to handle errors
         console.error('An error occurred: ', err);
-})
+})*/
+
 
 /*// Please don't use JQuery for DOM manipulation and form submission IRL. Please use React/Vue/Angular instead!
 $(function () {

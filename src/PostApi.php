@@ -34,11 +34,11 @@ class PostApi
 
         $group->post('', function (Request $request, Response $response, $args) { // POST /api/posts          Create post
             $input = json_decode(file_get_contents('php://input'));
+            $image = $input->image;
             $title =  $input->title;
             $content =  $input->content;
-            $image = $input->image;
             $author=  $input->author;
-            $response->getBody()->write(json_encode($this->postService->createPost($title, $image, $content, $author)));
+            $response->getBody()->write(json_encode($this->postService->createPost($image, $title, $content, $author)));
             return $response->withHeader('Content-Type', 'application/json');
         });
 
@@ -51,24 +51,27 @@ class PostApi
             return $response->withStatus(code:204);
         });
 
-
-        /*  $group->post('/{id}', function (Request $request, Response $response, $args) { // POST /api/posts/{id}    Change specific post
+        $group->put('/{id}', function (Request $request, Response $response, $args) { // PUT /api/posts/{id}    Change specific post
             $input = json_decode(file_get_contents('php://input'));
-            $title =  $input->title;
-            $author=  $input->author;
-            $content =  $input->content;
             $image =  $input->image;
-            $response->getBody()->write(json_encode($this->postService->updatePost((int)$args['id'], $title, $author, $content, $image)));
-            return $response->withHeader('Content-Type', 'application/json');
-        });*/
-        $group->put('/{id}', function (Request $request, Response $response, $args) { // POST /api/posts/{id}    Change specific post
-            $input = json_decode(file_get_contents('php://input'));
             $title =  $input->title;
-            $author=  $input->author;
             $content =  $input->content;
-            $image =  $input->image;
-            $response->getBody()->write(json_encode($this->postService->updatePost((int)$args['id'], $title, $author, $content, $image)));
+            $author=  $input->author;
+            $response->getBody()->write(json_encode($this->postService->updatePost((int)$args['id'], $image, $title, $content, $author )));
             return $response->withHeader('Content-Type', 'application/json');
         });
+
+/*        $group->put('', function (Request $request, Response $response, $args) { // PUT /api/posts/   Create extract column
+
+            $extract = substr(content, 0, 100);  // returns an extract of content
+
+            $input = json_decode(file_get_contents('php://input'));
+            $content =  $input->content;
+            $extract=  $input->extract;
+            $response->getBody()->write(json_encode($this->postService->createExtract( $content, $extract )));
+            return $response->withHeader('Content-Type', 'application/json');
+        });*/
+
+
     }
 }

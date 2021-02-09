@@ -10,81 +10,273 @@ body{
     display:grid;
     grid-template-columns: repeat(6, 16.7%);
     font-size: 16px;
+    background-color: #FAFAFA;
+}
+
+header{
+    position: fixed;
 }
 
 header, footer{
     grid-column: 1 /7;
     width: 100vw;
-    background-color: #ACDBE5;
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 }
 
-h1, .copyright{
+header h1{
+    font-size: 20px;
+    margin: 2vh auto;
+    text-align: center;
+}
+header a:hover{
+    color:#000000;
+}
+
+#intra {
+    color:#486F64;
+    text-transform: uppercase;
+}
+
+
+.copyright{
     margin: 5vh auto;
     text-align: center;
 }
+button:focus{
+    outline: none;
+}
 
-
+#main {
+    margin: 15vh auto;
+    min-height: 75vh;
+    padding: 0 25vw 0 5vw;
+}
+#main ul{
+    margin-bottom: 0;
+}
 
 .sidebar{
     grid-column: 1 /2;
-    background-color: blueviolet;
+    position: fixed;
+    top:15vh;
+    left:2vw;
 }
 
 .sidebar ul{
-    margin-top:4vh;
+    padding:2vh 2vw;
 }
 .sidebar li{
     font-size: 20px;
-    margin-bottom: 2vh;
+    margin-bottom: 3vh;
+}
+.sidebar button{
+    border:none;
+    background-color: transparent;
 }
 
 .sidebar a{
     text-decoration: none;
     color: #000000;
 }
-.sidebar a:hover{
-    color: #ACDBE5;
+.sidebar a:hover, .sidebar button:hover{
+    color: #5B8E81;
+    transition: all 0.5s ease-in-out;
 }
 
 .container{
     grid-column: 2 /7;
 }
+
 a{
     text-decoration: none;
     color:black;
 }
-h2{
-    display: inline-block;
-}
-#toAddPost{
-    padding:1vh;
-}
 
 li{
     list-style: none;
-    margin-bottom: 10vh;
-
+    margin-bottom: 5vh;
 }
 
-input[type=text],textarea {
+#main li, #posts li{
+    padding-bottom: 5vh;
+}
+
+h3{
+    margin:3vh 0;
+}
+
+p{
+    font-family: Georgia;
+    font-size: 18px;
+}
+
+
+/*news*/
+ul{
+    padding:0;
+}
+
+#posts li, #banner, .sidebar ul, #editPosts li, #formElem, #main li{
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+#posts button{
+    border:none;
+    background-color: #ffffff;
+}
+
+#editPosts li{
+    padding:4vh 0;
+}
+
+#formElem{
+    padding:4vh 0 10vh 0;
+}
+
+
+#posts #dot {
+    height: 10px;
+    width: 10px;
+    background-color: #C94355;
+    border-radius: 50%;
+    display: inline-block;
+    padding:0;
+    margin:0 1vw 0 2vw;
+}
+
+#posts img, #editPosts img,  #main img{
     width: 100%;
+}
+#posts h3, #editPosts h3, #main h3{
+    padding:0 4vw;
+    text-align: left;
+}
+#posts p, #editPosts p, #main li p{
+    padding:0 4vw;
+    text-align: left;
+}
+
+#posts button span, #editPosts span, #main span{
+    color:grey;
+    font-size: 12px;
+}
+
+#posts button span{
+    display: flex;
+}
+
+
+#posts span, #main span{
+    padding:0 4vw
+}
+
+
+
+#banner h3{
+    display: inline-block;
+    padding:0;
+}
+
+/*Add news post button*/
+#toAddPost{
+    padding:1vh 2vw;
+    display: flex;
+    float:right;
+    border: none;
+    background-color: #5B8E81;
+    border-radius: 20px;
+}
+#toAddPost a{
+    color:#ffffff;
+}
+
+#toAddPost:hover{
+    background-color: #486F65;
+    transition: all 0.5s ease-in-out;
+}
+
+
+/*form*/
+#archiveH1{
+    display: inline-block;
+}
+
+
+input:focus, textarea:focus{
+     background-color: #E2F1ED;
+     outline: none;
+ }
+input[type=text],textarea {
+    width: 84%;
     padding: 1vh 1vw;
-    margin: 8px 0;
+    margin: 1vh 4vw;
     box-sizing: border-box;
     color: #505050;
+    font-family: Georgia;
+    border:1px solid #C4C4C4;
 }
 
 input, label{
     display:block;
 }
-#id{
+.id{
     display:inline-block;
 }
 
 label{
-    margin-top: 2vh;
+    margin: 1vh 0 1vh 4vw;
 }
 
+.editForm button, #submitNewPost{
+    font-size: 16px;
+    border:none;
+    border-radius: 20px;
+    padding: 1vh 2vw;
+    background-color:#5B8E81;
+    color:#ffffff;
+    margin-left: 1vw;
+}
+
+#submitNewPost {
+    float: right;
+    margin:0 4vw;
+}
+
+.editForm button:hover, #submitNewPost:hover{
+    background-color: #486F65;
+    transition: all 0.5s ease-in-out;
+}
+
+#editPosts span{
+    padding: 0 2vw 0 4vw;
+}
+
+#editPosts #createdValue, #editPosts #id {
+    padding: 0 1vw;
+}
+#submit{
+    margin-left: 5vw;
+}
+
+#addPost{
+    padding-top: 15vh;
+}
+
+
+#backToTop{
+    position: relative;
+    bottom:-10vh;
+    left:47%;
+}
+
+#backToTop:hover {
+    color: #5B8E81;
+    transition: all 0.5s ease-in-out;
+}
+/*footer*/
 .copyright{
     font-size: 14px;
 }
+
